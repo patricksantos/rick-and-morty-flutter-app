@@ -3,8 +3,8 @@ import 'package:rickmortyapp/core/entity/episode.dart';
 class Page {
   final int _count;
   final int _pages;
-  final String _next;
-  final String _prev;
+  final String? _next;
+  final String? _prev;
   final List<Episode> _episodes;
 
   Page(
@@ -17,7 +17,7 @@ class Page {
 
   int get count => _count;
   int get pages => _pages;
-  String get next => _next;
-  String get prev => _prev;
+  String? get next => _next;
+  String? get prev => _prev;
   List<Episode> get episodes => _episodes;
 }

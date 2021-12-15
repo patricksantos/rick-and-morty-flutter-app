@@ -1,5 +1,6 @@
-import 'package:rickmortyapp/core/entity/episode.dart';
+import 'package:dartz/dartz.dart';
 import 'package:rickmortyapp/core/entity/page.dart';
+import 'package:rickmortyapp/core/errors/erros.dart';
 import 'package:rickmortyapp/core/facade/i_rick_morty_repository.dart';
 
 class AllEpisodes {
@@ -8,17 +9,28 @@ class AllEpisodes {
 
   AllEpisodes(this._repository);
 
-  Future<Page> execute() async {
+  Future<Either<ErrorApi, Page>> execute() async {
     var firstPage = await _repository.firstPage();
-    if (_page == null) _page = firstPage;
-    return firstPage;
+    return firstPage.fold(
+      (l) => left(ErrorApi(l.message)),
+      (r) => right(r),
+    );
   }
 
-  Future<Page> toUpdate(String url) async {
+  Future<Either<ErrorApi, Page?>> toUpdate(String url) async {
     if (_page == null) {
-      return await _repository.getPage(_page!.next);
+      if (_page!.next == null) return right(null);
+      var getPage = await _repository.getPage(_page!.next!);
+      return getPage.fold(
+        (l) => left(ErrorApi(l.message)),
+        (r) => right(r),
+      );
     } else {
-      return execute();
+      var execute = await this.execute();
+      return execute.fold(
+        (l) => left(ErrorApi(l.message)),
+        (r) => right(r),
+      );
     }
   }
 }

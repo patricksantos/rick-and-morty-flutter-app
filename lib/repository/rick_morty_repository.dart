@@ -1,39 +1,71 @@
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:rickmortyapp/adapter/episode_adapter.dart';
 import 'package:rickmortyapp/adapter/page_adapter.dart';
 import 'package:rickmortyapp/core/entity/page.dart';
 import 'package:rickmortyapp/core/entity/episode.dart';
+import 'package:rickmortyapp/core/errors/erros.dart';
 import 'package:rickmortyapp/core/facade/i_rick_morty_repository.dart';
 
 class RickMortyRepository implements IRickMortyRepository {
   final Dio _dio = Dio();
 
   @override
-  Future<List<Episode>> allEpisodes() {
-    // TODO: implement allEpisodes
-    throw UnimplementedError();
+  Future<Either<ErrorApi, List<Episode>>> allEpisodes() async {
+    try {
+      List<Episode> listEpisode = <Episode>[];
+      Response response;
+      response = await _dio.get("https://rickandmortyapi.com/api/episode");
+      Page page = PageAdapter.create(response.data);
+      listEpisode.addAll(page.episodes);
+      for (int i = 2; i < page.pages + 1; i++) {
+        if (page.next != null) {
+          var data = await getPage(page.next!);
+          data.fold(
+            (l) => left(ErrorApi(l.message)),
+            (r) => listEpisode.addAll(r.episodes),
+          );
+        }
+      }
+      return right(listEpisode);
+    } catch (e) {
+      return left(ErrorApi(e.toString()));
+    }
   }
 
   @override
-  Future<Episode> getEpisode(int id) async {
-    Response response;
-    response = await _dio.get("https://rickandmortyapi.com/api/episode/$id");
-    Episode episode = response.data;
-    return episode;
+  Future<Either<ErrorApi, Episode>> getEpisode(int id) async {
+    try {
+      Response response;
+      response = await _dio.get("https://rickandmortyapi.com/api/episode/$id");
+      Episode episode = EpisodeAdapter.create(response.data);
+      return right(episode);
+    } catch (e) {
+      return left(ErrorApi(e.toString()));
+    }
   }
 
   @override
-  Future<Page> getPage(String url) async {
-    Response response;
-    response = await _dio.get(url);
-    Page page = PageAdapter.create(response.data);
-    return page;
+  Future<Either<ErrorApi, Page>> getPage(String url) async {
+    try {
+      Response response;
+      response = await _dio.get(url);
+      Page page = PageAdapter.create(response.data);
+      return right(page);
+    } catch (e) {
+      return left(ErrorApi(e.toString()));
+    }
   }
 
   @override
-  Future<Page> firstPage() async {
-    Response response;
-    response = await _dio.get("https://rickandmortyapi.com/api/episode");
-    Page page = PageAdapter.create(response.data);
-    return page;
+  Future<Either<ErrorApi, Page>> firstPage() async {
+    try {
+      Response response;
+      response = await _dio.get("https://rickandmortyapi.com/api/episode");
+      Page page = PageAdapter.create(response.data);
+      return right(page);
+    } catch (e) {
+      return left(ErrorApi(e.toString()));
+    }
   }
 }

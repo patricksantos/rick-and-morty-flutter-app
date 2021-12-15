@@ -5,7 +5,7 @@ class Episode {
   final String _name;
   final String _episode;
   final List<Character> _characters;
-  final DateTime _air_date;
+  final String _air_date;
 
   Episode(
     this._id,
@@ -19,5 +19,5 @@ class Episode {
   String get name => _name;
   String get episode => _episode;
   List<Character> get characters => _characters;
-  DateTime get date => _air_date;
+  String get date => _air_date;
 }
