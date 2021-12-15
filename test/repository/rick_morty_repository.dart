@@ -1,58 +1,85 @@
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:rickmortyapp/core/entity/episode.dart';
-// import 'package:rickmortyapp/core/entity/page.dart';
-// import 'package:rickmortyapp/core/facade/i_rick_morty_repository.dart';
-// import 'package:rickmortyapp/repository/rick_morty_repository.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:rickmortyapp/core/facade/i_rick_morty_repository.dart';
+import 'package:rickmortyapp/repository/rick_morty_repository.dart';
 
-// void main() {
-//   IRickMortyRepository repository = RickMortyRepository();
+void main() {
+  IRickMortyRepository repository = RickMortyRepository();
 
-//   test('numero total de episodios', () async {
-//     var episodes = await repository.allEpisodes();
-//     episodes.forEach((episode) {
-//       print(episode.id);
-//     });
-//     expect(episodes.length, 51);
-//   });
+  test('numero total de episodios', () async {
+    var episodes = await repository.allEpisodes();
+    episodes.fold(
+      (l) {},
+      (r) => expect(r.length, 51),
+    );
+  });
 
-//   test('retorno de um episodio', () async {
-//     Episode episode1 = await repository.getEpisode(1);
-//     expect(episode1.id, 1);
-//     Episode episode2 = await repository.getEpisode(2);
-//     expect(episode2.id, 2);
-//   });
+  test('retorno de um episodio', () async {
+    var episode1 = await repository.getEpisode(1);
+    episode1.fold(
+      (l) {},
+      (r) => expect(r.id, 1),
+    );
 
-//   test('retorno da proxima pagina', () async {
-//     Page page = await repository.firstPage();
-//     expect(page.next, "https://rickandmortyapi.com/api/episode?page=2");
+    var episode2 = await repository.getEpisode(2);
+    episode2.fold(
+      (l) {},
+      (r) => expect(r.id, 2),
+    );
+  });
 
-//     Page pageTwo = await repository.getPage(page.next!);
-//     expect(pageTwo.next, "https://rickandmortyapi.com/api/episode?page=3");
-//   });
+  test('retorno da proxima pagina', () async {
+    var page = await repository.firstPage();
+    page.fold(
+      (l) {},
+      (r) => expect(r.next, "https://rickandmortyapi.com/api/episode?page=2"),
+    );
 
-//   test('get page', () async {
-//     Page pageTwo = await repository
-//         .getPage("https://rickandmortyapi.com/api/episode?page=3");
-//     expect(pageTwo.next, null);
-//   });
+    var pageTwo =
+        await repository.getPage(page.toOption().toNullable()!.next.toString());
+    pageTwo.fold(
+      (l) {},
+      (r) => expect(r.next, "https://rickandmortyapi.com/api/episode?page=3"),
+    );
+  });
 
-//   test('retorno da proxima pagina', () async {
-//     Page page = await repository.firstPage();
-//     expect(page.prev, null);
-//   });
+  test('get page', () async {
+    var pageTwo = await repository
+        .getPage("https://rickandmortyapi.com/api/episode?page=3");
+    pageTwo.fold(
+      (l) {},
+      (r) => expect(r.next, null),
+    );
+  });
 
-//   test('retorno de episodios', () async {
-//     Page page = await repository.firstPage();
-//     expect(page.count, 51);
-//   });
+  test('retorno da proxima pagina', () async {
+    var page = await repository.firstPage();
+    page.fold(
+      (l) {},
+      (r) => expect(r.prev, null),
+    );
+  });
 
-//   test('numero total de paginas', () async {
-//     Page page = await repository.firstPage();
-//     expect(page.pages, 3);
-//   });
+  test('retorno de episodios', () async {
+    var page = await repository.firstPage();
+    page.fold(
+      (l) {},
+      (r) => expect(r.count, 51),
+    );
+  });
 
-//   test('primeiro episodio', () async {
-//     Page page = await repository.firstPage();
-//     expect(page.episodes.first.id, 1);
-//   });
-// }
+  test('numero total de paginas', () async {
+    var page = await repository.firstPage();
+    page.fold(
+      (l) {},
+      (r) => expect(r.pages, 3),
+    );
+  });
+
+  test('primeiro episodio', () async {
+    var page = await repository.firstPage();
+    page.fold(
+      (l) {},
+      (r) => expect(r.episodes.first.id, 1),
+    );
+  });
+}

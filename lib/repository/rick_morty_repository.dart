@@ -14,19 +14,23 @@ class RickMortyRepository implements IRickMortyRepository {
   Future<Either<ErrorApi, List<Episode>>> allEpisodes() async {
     try {
       List<Episode> listEpisode = <Episode>[];
+
       Response response;
       response = await _dio.get("https://rickandmortyapi.com/api/episode");
       Page page = PageAdapter.create(response.data);
       listEpisode.addAll(page.episodes);
-      for (int i = 2; i < page.pages + 1; i++) {
-        if (page.next != null) {
-          var data = await getPage(page.next!);
-          data.fold(
-            (l) => left(ErrorApi(l.message)),
-            (r) => listEpisode.addAll(r.episodes),
-          );
+
+      String? nextPage = page.next;
+      for (int i = 2; i <= 3; i++) {
+        if (nextPage != null) {
+          var data = await getPage(nextPage!);
+          data.fold((l) => left(ErrorApi(l.message)), (r) {
+            nextPage = r.next;
+            listEpisode.addAll(r.episodes);
+          });
         }
       }
+
       return right(listEpisode);
     } catch (e) {
       return left(ErrorApi(e.toString()));
