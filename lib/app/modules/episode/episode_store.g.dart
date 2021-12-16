@@ -9,39 +9,32 @@ part of 'episode_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$EpisodeStore on _EpisodeStoreBase, Store {
-  final _$valueAtom = Atom(name: '_EpisodeStoreBase.value');
+  final _$episodeAtom = Atom(name: '_EpisodeStoreBase.episode');
 
   @override
-  int get value {
-    _$valueAtom.reportRead();
-    return super.value;
+  Episode? get episode {
+    _$episodeAtom.reportRead();
+    return super.episode;
   }
 
   @override
-  set value(int value) {
-    _$valueAtom.reportWrite(value, super.value, () {
-      super.value = value;
+  set episode(Episode? value) {
+    _$episodeAtom.reportWrite(value, super.episode, () {
+      super.episode = value;
     });
   }
 
-  final _$_EpisodeStoreBaseActionController =
-      ActionController(name: '_EpisodeStoreBase');
+  final _$getEpisodeAsyncAction = AsyncAction('_EpisodeStoreBase.getEpisode');
 
   @override
-  void increment() {
-    final _$actionInfo = _$_EpisodeStoreBaseActionController.startAction(
-        name: '_EpisodeStoreBase.increment');
-    try {
-      return super.increment();
-    } finally {
-      _$_EpisodeStoreBaseActionController.endAction(_$actionInfo);
-    }
+  Future getEpisode(int id) {
+    return _$getEpisodeAsyncAction.run(() => super.getEpisode(id));
   }
 
   @override
   String toString() {
     return '''
-value: ${value}
+episode: ${episode}
     ''';
   }
 }

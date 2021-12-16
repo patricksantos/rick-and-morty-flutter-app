@@ -39,7 +39,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         centerTitle: true,
-        title: const Text('Rick and Morty'),
+        title: const Text('Rick and Morty Episodes'),
       ),
       body: Stack(
         children: [
@@ -52,9 +52,24 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                   return InkWell(
                     onTap: () => Modular.to
                         .pushNamed('/episode/${store.episodes[index].id}'),
-                    child: ListTile(
-                      title: Text(store.episodes[index].name),
-                      subtitle: Text(store.episodes[index].episode),
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 6,
+                      ),
+                      child: ListTile(
+                        title: Text(store.episodes[index].name),
+                        subtitle: Text(store.episodes[index].episode),
+                        leading: const SizedBox(
+                          width: 50,
+                          child: Center(
+                            child: Icon(
+                              Icons.movie,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   );
                 },
