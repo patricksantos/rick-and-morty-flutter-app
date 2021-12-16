@@ -12,20 +12,63 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends ModularState<HomePage, HomeStore> {
+  ScrollController? _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    store.firstPage();
+    _scrollController = ScrollController()..addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController!.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController!.position.extentAfter < 500) {
+      store.toUpdate();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Counter'),
+        backgroundColor: Colors.blue,
+        centerTitle: true,
+        title: const Text('Rick and Morty'),
       ),
-      body: Observer(
-        builder: (context) => Text('${store.counter}'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          store.increment();
-        },
-        child: Icon(Icons.add),
+      body: Stack(
+        children: [
+          Observer(
+            builder: (context) => Scrollbar(
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: store.episodes.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                    onTap: () => Modular.to
+                        .pushNamed('/episode/${store.episodes[index].id}'),
+                    child: ListTile(
+                      title: Text(store.episodes[index].name),
+                      subtitle: Text(store.episodes[index].episode),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          Observer(
+            builder: (context) => store.isEmptyEpisode
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Container(),
+          ),
+        ],
       ),
     );
   }

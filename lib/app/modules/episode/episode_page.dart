@@ -3,11 +3,14 @@ import 'package:rickmortyapp/app/modules/episode/episode_store.dart';
 import 'package:flutter/material.dart';
 
 class EpisodePage extends StatefulWidget {
+  final String id;
   final String title;
-  const EpisodePage({Key? key, this.title = 'EpisodePage'}) : super(key: key);
+  const EpisodePage({Key? key, this.title = 'EpisodePage', required this.id})
+      : super(key: key);
   @override
   EpisodePageState createState() => EpisodePageState();
 }
+
 class EpisodePageState extends State<EpisodePage> {
   final EpisodeStore store = Modular.get();
 
@@ -18,7 +21,7 @@ class EpisodePageState extends State<EpisodePage> {
         title: Text(widget.title),
       ),
       body: Column(
-        children: <Widget>[],
+        children: <Widget>[Text(widget.id.toString())],
       ),
     );
   }

@@ -5,7 +5,6 @@ import 'package:rickmortyapp/core/facade/i_rick_morty_repository.dart';
 
 class AllEpisodes {
   final IRickMortyRepository _repository;
-  Page? _page;
 
   AllEpisodes(this._repository);
 
@@ -17,20 +16,11 @@ class AllEpisodes {
     );
   }
 
-  Future<Either<ErrorApi, Page?>> toUpdate(String url) async {
-    if (_page == null) {
-      if (_page!.next == null) return right(null);
-      var getPage = await _repository.getPage(_page!.next!);
-      return getPage.fold(
-        (l) => left(ErrorApi(l.message)),
-        (r) => right(r),
-      );
-    } else {
-      var execute = await this.execute();
-      return execute.fold(
-        (l) => left(ErrorApi(l.message)),
-        (r) => right(r),
-      );
-    }
+  Future<Either<ErrorApi, Page>> toUpdate(String url) async {
+    var getPage = await _repository.getPage(url);
+    return getPage.fold(
+      (l) => left(ErrorApi(l.message)),
+      (r) => right(r),
+    );
   }
 }
