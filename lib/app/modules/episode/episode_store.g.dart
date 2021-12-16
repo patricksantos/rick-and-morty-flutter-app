@@ -24,17 +24,49 @@ mixin _$EpisodeStore on _EpisodeStoreBase, Store {
     });
   }
 
+  final _$charactersAtom = Atom(name: '_EpisodeStoreBase.characters');
+
+  @override
+  List<Character> get characters {
+    _$charactersAtom.reportRead();
+    return super.characters;
+  }
+
+  @override
+  set characters(List<Character> value) {
+    _$charactersAtom.reportWrite(value, super.characters, () {
+      super.characters = value;
+    });
+  }
+
   final _$getEpisodeAsyncAction = AsyncAction('_EpisodeStoreBase.getEpisode');
 
   @override
-  Future getEpisode(int id) {
+  Future<void> getEpisode(int id) {
     return _$getEpisodeAsyncAction.run(() => super.getEpisode(id));
+  }
+
+  final _$_getAllCharactersAsyncAction =
+      AsyncAction('_EpisodeStoreBase._getAllCharacters');
+
+  @override
+  Future<void> _getAllCharacters(List<String> urls) {
+    return _$_getAllCharactersAsyncAction
+        .run(() => super._getAllCharacters(urls));
+  }
+
+  final _$_characterAsyncAction = AsyncAction('_EpisodeStoreBase._character');
+
+  @override
+  Future<void> _character(String url) {
+    return _$_characterAsyncAction.run(() => super._character(url));
   }
 
   @override
   String toString() {
     return '''
-episode: ${episode}
+episode: ${episode},
+characters: ${characters}
     ''';
   }
 }

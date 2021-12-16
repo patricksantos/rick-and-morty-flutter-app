@@ -30,7 +30,10 @@ abstract class HomeStoreBase with Store {
   Future<void> firstPage() async {
     var firstPage = await _allEpisodes!.execute();
     firstPage.fold(
-      (l) => throw ErrorApi(l.message),
+      (l) {
+        this.firstPage();
+        throw ErrorApi(l.message);
+      },
       (r) {
         episodes.addAll(r.episodes);
         _page = r;
@@ -43,7 +46,7 @@ abstract class HomeStoreBase with Store {
     if (_page!.next != null) {
       var page = await _allEpisodes!.toUpdate(_page!.next!);
       page.fold(
-        (l) => null, //throw ErrorApi(l.message),
+        (l) => throw ErrorApi(l.message),
         (r) {
           if (_page!.next != r.next) {
             _page = r;
