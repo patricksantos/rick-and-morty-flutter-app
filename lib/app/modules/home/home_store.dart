@@ -2,7 +2,7 @@ import 'package:mobx/mobx.dart';
 import 'package:rickmortyapp/core/entity/episode.dart';
 import 'package:rickmortyapp/core/entity/page.dart';
 import 'package:rickmortyapp/core/errors/erros.dart';
-import 'package:rickmortyapp/core/facade/i_rick_morty_repository.dart';
+import 'package:rickmortyapp/core/repository/i_rick_morty_repository.dart';
 import 'package:rickmortyapp/core/usecase/all_episodes.dart';
 
 part 'home_store.g.dart';

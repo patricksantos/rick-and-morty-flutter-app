@@ -34,19 +34,46 @@ class EpisodePageState extends State<EpisodePage> {
                 ),
         ),
       ),
-      body: Stack(
-        children: [
-          Column(
-            children: <Widget>[Text(widget.id.toString())],
-          ),
-          Observer(
-            builder: (context) => store.episode == null
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Container(),
-          ),
-        ],
+      body: Observer(
+        builder: (context) => store.episode == null
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Center(
+                    child: Icon(
+                      Icons.movie,
+                      size: 80,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Text(
+                    store.episode!.name.toString(),
+                    style: const TextStyle(
+                      fontStyle: FontStyle.normal,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    store.episode!.episode.toString(),
+                    style: const TextStyle(
+                      fontStyle: FontStyle.normal,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Text(
+                    store.episode!.date.toString(),
+                    style: const TextStyle(
+                      fontStyle: FontStyle.normal,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

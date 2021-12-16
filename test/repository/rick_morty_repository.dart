@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rickmortyapp/core/facade/i_rick_morty_repository.dart';
+import 'package:rickmortyapp/core/repository/i_rick_morty_repository.dart';
 import 'package:rickmortyapp/repository/rick_morty_repository.dart';
 
 void main() {
@@ -10,6 +10,43 @@ void main() {
     episodes.fold(
       (l) {},
       (r) => expect(r.length, 51),
+    );
+  });
+
+  test('retorno de um personagem do episodio', () async {
+    var episode = await repository.getEpisode(1);
+    episode.fold(
+      (l) {},
+      (r) => expect(
+        r.characters.first,
+        "https://rickandmortyapi.com/api/character/1",
+      ),
+    );
+  });
+
+  test('retorno do nome de um personagem', () async {
+    var episode = await repository.getEpisode(1);
+    episode.fold((l) {}, (r) async {
+      var charecter = await repository.getCharacter(r.characters.first);
+      charecter.fold(
+        (l) {},
+        (r) => expect(
+          r.name,
+          "Rick Sanchez",
+        ),
+      );
+    });
+  });
+
+  test('retorno do nome de um personagem', () async {
+    var charecter = await repository
+        .getCharacter("https://rickandmortyapi.com/api/character/1");
+    charecter.fold(
+      (l) {},
+      (r) => expect(
+        r.name,
+        "Rick Sanchez",
+      ),
     );
   });
 

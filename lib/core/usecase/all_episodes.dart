@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:rickmortyapp/core/entity/page.dart';
 import 'package:rickmortyapp/core/errors/erros.dart';
-import 'package:rickmortyapp/core/facade/i_rick_morty_repository.dart';
+import 'package:rickmortyapp/core/repository/i_rick_morty_repository.dart';
 
 class AllEpisodes {
   final IRickMortyRepository _repository;

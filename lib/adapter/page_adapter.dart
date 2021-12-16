@@ -4,26 +4,16 @@ import 'package:rickmortyapp/core/entity/page.dart';
 class PageAdapter {
   static Page create(Map<String, dynamic> json) {
     List<Episode> episodes = (json['results'] as List).map((episode) {
-      // List<Character> characters =
-      //     (episode['characters'] as List).map((character) {
-      //   return Character(
-      //     int.parse(character['id'].toString()),
-      //     character['name'],
-      //     character['status'],
-      //     character['species'],
-      //     character['gender'],
-      //     character['origin']["name"],
-      //     character['location']["name"],
-      //     character['image'],
-      //   );
-      // }).toList();
+      List<String> characters = (episode['characters'] as List).map((item) {
+        return item.toString();
+      }).toList();
 
       return Episode(
         int.parse(episode['id'].toString()),
         episode['name'],
         episode['episode'],
         episode['air_date'],
-        [],
+        characters,
       );
     }).toList();
 

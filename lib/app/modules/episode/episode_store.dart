@@ -1,6 +1,6 @@
 import 'package:mobx/mobx.dart';
 import 'package:rickmortyapp/core/entity/episode.dart';
-import 'package:rickmortyapp/core/facade/i_rick_morty_repository.dart';
+import 'package:rickmortyapp/core/repository/i_rick_morty_repository.dart';
 import 'package:rickmortyapp/core/usecase/get_episode.dart';
 
 part 'episode_store.g.dart';

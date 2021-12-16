@@ -1,11 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:rickmortyapp/adapter/character_adapter.dart';
 import 'package:rickmortyapp/adapter/episode_adapter.dart';
 import 'package:rickmortyapp/adapter/page_adapter.dart';
+import 'package:rickmortyapp/core/entity/character.dart';
 import 'package:rickmortyapp/core/entity/page.dart';
 import 'package:rickmortyapp/core/entity/episode.dart';
 import 'package:rickmortyapp/core/errors/erros.dart';
-import 'package:rickmortyapp/core/facade/i_rick_morty_repository.dart';
+import 'package:rickmortyapp/core/repository/i_rick_morty_repository.dart';
 
 class RickMortyRepository implements IRickMortyRepository {
   final Dio _dio = Dio();
@@ -15,8 +17,8 @@ class RickMortyRepository implements IRickMortyRepository {
     try {
       List<Episode> listEpisode = <Episode>[];
 
-      Response response;
-      response = await _dio.get("https://rickandmortyapi.com/api/episode");
+      Response response =
+          await _dio.get("https://rickandmortyapi.com/api/episode");
       Page page = PageAdapter.create(response.data);
       listEpisode.addAll(page.episodes);
 
@@ -40,8 +42,8 @@ class RickMortyRepository implements IRickMortyRepository {
   @override
   Future<Either<ErrorApi, Episode>> getEpisode(int id) async {
     try {
-      Response response;
-      response = await _dio.get("https://rickandmortyapi.com/api/episode/$id");
+      Response response =
+          await _dio.get("https://rickandmortyapi.com/api/episode/$id");
       Episode episode = EpisodeAdapter.create(response.data);
       return right(episode);
     } catch (e) {
@@ -52,8 +54,7 @@ class RickMortyRepository implements IRickMortyRepository {
   @override
   Future<Either<ErrorApi, Page>> getPage(String url) async {
     try {
-      Response response;
-      response = await _dio.get(url);
+      Response response = await _dio.get(url);
       Page page = PageAdapter.create(response.data);
       return right(page);
     } catch (e) {
@@ -64,10 +65,21 @@ class RickMortyRepository implements IRickMortyRepository {
   @override
   Future<Either<ErrorApi, Page>> firstPage() async {
     try {
-      Response response;
-      response = await _dio.get("https://rickandmortyapi.com/api/episode");
+      Response response =
+          await _dio.get("https://rickandmortyapi.com/api/episode");
       Page page = PageAdapter.create(response.data);
       return right(page);
+    } catch (e) {
+      return left(ErrorApi(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ErrorApi, Character>> getCharacter(String url) async {
+    try {
+      Response response = await _dio.get(url);
+      Character character = CharacterAdapter.create(response.data);
+      return right(character);
     } catch (e) {
       return left(ErrorApi(e.toString()));
     }

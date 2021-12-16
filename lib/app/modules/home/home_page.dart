@@ -41,49 +41,42 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
         centerTitle: true,
         title: const Text('Rick and Morty Episodes'),
       ),
-      body: Stack(
-        children: [
-          Observer(
-            builder: (context) => Scrollbar(
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: store.episodes.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return InkWell(
-                    onTap: () => Modular.to
-                        .pushNamed('/episode/${store.episodes[index].id}'),
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 6,
-                      ),
-                      child: ListTile(
-                        title: Text(store.episodes[index].name),
-                        subtitle: Text(store.episodes[index].episode),
-                        leading: const SizedBox(
-                          width: 50,
-                          child: Center(
-                            child: Icon(
-                              Icons.movie,
-                              size: 30,
+      body: Observer(
+        builder: (context) => store.isEmptyEpisode
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Scrollbar(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: store.episodes.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return InkWell(
+                      onTap: () => Modular.to
+                          .pushNamed('/episode/${store.episodes[index].id}'),
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 6,
+                        ),
+                        child: ListTile(
+                          title: Text(store.episodes[index].name),
+                          subtitle: Text(store.episodes[index].episode),
+                          leading: const SizedBox(
+                            width: 50,
+                            child: Center(
+                              child: Icon(
+                                Icons.movie,
+                                size: 30,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ),
-          Observer(
-            builder: (context) => store.isEmptyEpisode
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Container(),
-          ),
-        ],
       ),
     );
   }
